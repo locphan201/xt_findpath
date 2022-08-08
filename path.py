@@ -1,5 +1,6 @@
 import pygame as pg
 from vertex import Vertex
+import networkx as nx
 
 def read_file():
     vertices = []
@@ -27,9 +28,6 @@ def read_file():
         print('Cannot find the text file!')
     return vertices
 
-def findPath():
-    
-
 class Path:
     def __init__(self, img_file):
         pg.init()
@@ -44,6 +42,14 @@ class Path:
         self.vertices = read_file()
         self.connections = []
         ######################
+
+    def findPath(self, root):
+        graph = nx.DiGraph()
+        for v in self.vertices[root].connected_to:
+            graph.add_edges_from([(str(root), str(v))])
+
+
+        print(graph)
 
     def draw(self):
         self.screen.blit(self.img, (0, 0))
@@ -73,8 +79,7 @@ class Path:
                             if not i in self.connections:
                                 if len(self.connections) == 0:
                                     self.connections.append(i)
-                                else:
-                                    pass
+                                    self.findPath(i)
 
             if e.type == pg.KEYDOWN:
                 if e.key == pg.K_SPACE:
